@@ -1,6 +1,8 @@
 const express = require("express");
 const routes = require("./routes");
+const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 
 
 const app = express();
@@ -11,7 +13,9 @@ mongoose.connect("mongodb+srv://omnistack:omnistack@pessoal-4bwpv.mongodb.net/ai
     useUnifiedTopology: true
 });
 
+app.use(cors());
 app.use(express.json());
+app.use("/files", express.static(path.resolve(__dirname, "..", "uploads")));
 app.use(routes);
 
 

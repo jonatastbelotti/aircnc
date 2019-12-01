@@ -10,6 +10,14 @@ const espacoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Usuario"
     }
+}, {
+    toJSON: {
+        virtuals: true
+    }
+});
+
+espacoSchema.virtual("imagem_url").get(function() {
+    return `http://localhost:3333/files/${this.imagem}`
 });
 
 module.exports = mongoose.model("Espaco", espacoSchema);
