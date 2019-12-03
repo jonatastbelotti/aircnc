@@ -2,7 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const uploadConfig = require("./config/upload");
 
-const SessaoController = require("./controllers/SessaoController");
+const UsuarioController = require("./controllers/UsuarioController");
+const LoginController = require("./controllers/LoginController");
 const EspacoController = require("./controllers/EspacoTrabalhoController");
 const DashboardController = require("./controllers/DashboardController");
 const ReservaController = require("./controllers/ReservaController");
@@ -17,8 +18,10 @@ const upload = multer(uploadConfig);
 routes.get("/dashboard", DashboardController.buscar);
 routes.get("/espaco", EspacoController.listar);
 routes.post("/espaco", upload.single("imagem"), EspacoController.novo);
+routes.get("/espaco/:id", EspacoController.buscar);
 routes.post("/espaco/:id/reserva", ReservaController.novo);
-routes.post("/usuario", SessaoController.novo);
+routes.post("/usuario", UsuarioController.novo);
+routes.post("/login", LoginController.entrar);
 
 
 module.exports = routes;

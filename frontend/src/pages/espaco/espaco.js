@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import api from '../../services/api';
 
 import './style.css';
 import camera from '../../assets/camera.svg';
 
-export default function Espaco({ history }) {
+export default function Espaco({ history, match }) {
+    const [_id, setId] = useState(null);
     const [empresa, setEmpresa] = useState("");
     const [tecnologias, setTecnologias] = useState("");
     const [preco, setPreco] = useState("");
@@ -12,16 +13,41 @@ export default function Espaco({ history }) {
 
     const visualizacao = useMemo(
         () => {
-            return imagem ? URL.createObjectURL(imagem) : null
+            if (imagem) {
+                return URL.createObjectURL(imagem);
+            }
+
+            return null;
         },
         [imagem]
     );
+
+    // Setando uma função para ser executada assim que o componente é exibido
+    useEffect(() => {buscarEspaco()}, []);
+
+    // Função que irá buscar o espaço se for edição
+    async function buscarEspaco() {
+        if (match && "id" in match.params) {
+            const usuario = await localStorage.getItem("usuario");
+            const espaco = await api.get("/espaco/"+match.params.id, {
+                headers: {
+                    usuario
+                }
+            });
+
+            setId(espaco.data._id);
+            setEmpresa(espaco.data.empresa);
+            setTecnologias(espaco.data.tecnologias.join(","));
+            setPreco(espaco.data.preco);
+        }
+    }
 
     async function cadastrarEspaco(event) {
         event.preventDefault();
         const usuario = localStorage.getItem("usuario");
 
         const data = new FormData();
+        data.append("_id", _id);
         data.append("imagem", imagem);
         data.append("empresa", empresa);
         data.append("tecnologias", tecnologias);
@@ -75,7 +101,7 @@ export default function Espaco({ history }) {
                 onChange={event => setPreco(event.target.value)}
             />
 
-            <button type="submit" className="btn">Cadastrar</button>
+            <button type="submit" className="btn">Salvar</button>
         </form>
     );
 }

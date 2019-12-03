@@ -26,11 +26,13 @@ export default function Dashboard() {
         <>
             <ul className="lista-espacos">
                 {espacos.map(espaco => (
-                    <li key={espaco._id}>
-                        <header style={{backgroundImage: `url(${espaco.imagem_url})`}}/>
-                        <strong>{espaco.empresa}</strong>
-                        <span>{espaco.preco ? `R$${espaco.preco}/dia` : `GRATUITO`}</span>
-                    </li>
+                    <Link to={`/espaco/${espaco._id}`}>
+                        <li key={espaco._id}>
+                            <header style={{backgroundImage: `url(${espaco.imagem_url})`}}/>
+                            <strong>{espaco.empresa}</strong>
+                            <span>{espaco.preco ? `R$${espaco.preco}/dia` : `GRATUITO`}</span>
+                        </li>
+                    </Link>
                 ))}
             </ul>
 

@@ -10,9 +10,18 @@ module.exports = {
         return res.json(espacos);
     },
 
+    async buscar(req, res) {
+        const { usuario } = req.headers;
+        const { id } = req.params;
+
+        espaco = await Espaco.findById(id);
+
+        return res.json(espaco);
+    },
+
     async novo(req, res) {
         const { filename } = req.file;
-        const { empresa, preco, tecnologias } = req.body;
+        const { _id, empresa, preco, tecnologias } = req.body;
         const idUsuario = req.headers.usuario;
 
         const usuario = await Usuario.findById(idUsuario);
@@ -20,13 +29,26 @@ module.exports = {
             res.status(400).json({erro: "Usuário não existe."});
         }
 
-        const espaco = await Espaco.create({
-            usuario: idUsuario,
-            imagem: filename,
-            empresa,
-            preco,
-            tecnologias: tecnologias.split(",").map(item => item.trim())
-        });
+        // Se não tem id cria
+        let espaco = null;
+        if (!_id || _id == null || _id == "null") {
+            console.log("Inserindo");
+            espaco = await Espaco.create({
+                usuario: idUsuario,
+                imagem: filename,
+                empresa,
+                preco,
+                tecnologias: tecnologias.split(",").map(item => item.trim())
+            });
+        } else {
+            console.log("Editando");
+            espaco = await Espaco.updateOne({_id}, {
+                usuario: idUsuario,
+                empresa,
+                preco,
+                tecnologias: tecnologias.split(",").map(item => item.trim())
+            });
+        }
 
         return res.json(espaco);
     }

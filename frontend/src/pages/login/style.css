@@ -1,0 +1,21 @@
+form p {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+form a {
+    text-decoration: none;
+}
+
+form p span {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+form p span:hover {
+    cursor: pointer;
+    color: #f05a5b;
+}
